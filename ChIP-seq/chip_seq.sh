@@ -5,6 +5,7 @@ SECONDS=0
 # Change to the working directory
 cd ..
 
+
 ### QUALITY CONTROL ###
 
 # Quality control for the FNR reads
@@ -12,7 +13,6 @@ fastqc data/SRR576933.fastq -o quality/
 
 # Quality control for the control reads
 fastqc data/SRR576938.fastq -o quality/
-
 
 # Trimming the FNR reads
 java -jar ${HOME}/trimmomatic/Trimmomatic-0.39/trimmomatic-0.39.jar SE \
@@ -35,6 +35,7 @@ MINLEN:20 \
 # Quality control of the trimmed reads
 fastqc data/SRR576933_trimmed.fastq -o quality/
 fastqc data/SRR576938_trimmed.fastq -o quality/
+
 
 ### MAPPING READS ###
 
@@ -71,7 +72,6 @@ plotFingerprint -p 5 -b alignment/SRR576933_sorted.bam alignment/SRR576938_sorte
 # Genome size
 gsize=$"4641652"
 echo "Genome size: ${gsize}"
-
 
 # Peak calling
 macs3 callpeak -t alignment/SRR576933_sorted.bam \
@@ -112,12 +112,14 @@ bamCoverage --bam alignment/SRR576938_sorted_nodup.bam \
 --outFileFormat bedgraph --normalizeUsing RPGC \
 --effectiveGenomeSize $gsize
 
+
 ### MOTIF ANALYSIS ###
 
 # Retrieve the peak sequences corresponding to the peak coordinates
 bedtools getfasta -fi reference/e_coli_genome.fa \
 -bed macs/macs_peaks.narrowPeak \
 -fo macs/macs_peaks.fa
+
 
 duration=$SECONDS
 
